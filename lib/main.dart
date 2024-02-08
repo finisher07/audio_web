@@ -150,49 +150,35 @@ class _MyHomePageState extends State<MyHomePage> {
                 width: 10,
               ),
               IconButton(
-                  onPressed: loaded
-                      ? () async {
-                    if (player.position.inSeconds >= 10) {
-                      await player.seek(Duration(
-                          seconds: player.position.inSeconds - 10));
-                    } else {
-                      await player.seek(const Duration(seconds: 0));
+                  onPressed: loaded ? () async {
+                    if(_totalPlayedTime.inSeconds != 0){
+                      log("Call Api");
                     }
-                  }
-                      : null,
+                  } : null,
                   icon: const Icon(Icons.fast_rewind_rounded)),
               Container(
                 height: 50,
                 width: 50,
-                decoration: const BoxDecoration(
-                    shape: BoxShape.circle, color: Colors.red),
+                decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.red),
                 child: IconButton(
-                    onPressed: loaded
-                        ? () {
+                    onPressed: loaded ? () {
                       if (playing) {
                         pauseMusic();
                       } else {
                         playMusic();
                       }
-                    }
-                        : null,
+                    } : null,
                     icon: Icon(
                       playing ? Icons.pause : Icons.play_arrow,
                       color: Colors.white,
                     )),
               ),
               IconButton(
-                  onPressed: loaded
-                      ? () async {
-                    if (player.position.inSeconds + 10 <=
-                        player.duration!.inSeconds) {
-                      await player.seek(Duration(
-                          seconds: player.position.inSeconds + 10));
-                    } else {
-                      await player.seek(const Duration(seconds: 0));
+                  onPressed: loaded ? () async {
+                    if(_totalPlayedTime.inSeconds != 0){
+                      log("Call Api");
                     }
-                  }
-                      : null,
+                  } : null,
                   icon: const Icon(Icons.fast_forward_rounded)),
               const SizedBox(
                 width: 10,
