@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:developer';
+
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
@@ -28,11 +31,14 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
-  String musicUrl = "http://commondatastorage.googleapis.com/codeskulptor-demos/DDR_assets/Kangaroo_MusiQue_-_The_Neverwritten_Role_Playing_Game.mp3"; // Insert your music URL
-  String thumbnailImgUrl = "https://images.unsplash.com/photo-1575936123452-b67c3203c357?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
+  String musicUrl = "http://commondatastorage.googleapis.com/codeskulptor-demos/DDR_assets/Kangaroo_MusiQue_-_The_Neverwritten_Role_Playing_Game.mp3";
+  String thumbnailImgUrl = "https://www.raptier.com/backend/raptier/public/api/get-object/1706789379_scaled_download.jpeg";
   var player = AudioPlayer();
   bool loaded = false;
   bool playing = false;
+  Timer? timer;
+
+  Duration _totalPlayedTime = const Duration(seconds: -3);
 
   void loadMusic() async {
     await player.setUrl(musicUrl);
@@ -58,6 +64,15 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     loadMusic();
+
+    player.createPositionStream(minPeriod: const Duration(seconds: 1),maxPeriod: const Duration(seconds: 1)).listen((event) {
+      log("Time : ${_totalPlayedTime.inSeconds}");
+      if(_totalPlayedTime.inSeconds == 30){
+        log("call api at : ${_totalPlayedTime.inSeconds}");
+      }
+      _totalPlayedTime += const Duration(seconds: 1);
+    });
+
     super.initState();
   }
 
@@ -113,17 +128,12 @@ class _MyHomePageState extends State<MyHomePage> {
                               player.duration ?? const Duration(seconds: 0),
                               buffered: bufferedDuration,
                               timeLabelPadding: -1,
-                              timeLabelTextStyle: const TextStyle(
-                                  fontSize: 14, color: Colors.black),
+                              timeLabelTextStyle: const TextStyle(fontSize: 14, color: Colors.black),
                               progressBarColor: Colors.red,
                               baseBarColor: Colors.grey[200],
                               bufferedBarColor: Colors.grey[350],
                               thumbColor: Colors.red,
-                              onSeek: loaded
-                                  ? (duration) async {
-                                await player.seek(duration);
-                              }
-                                  : null,
+                              onSeek: loaded ? (duration) async {await player.seek(duration);} : null,
                             ),
                           ),
                         );
